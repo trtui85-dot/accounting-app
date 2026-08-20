@@ -14,7 +14,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    get('/api/dashboard')
+    get('/dashboard')
       .then(d => { setData(d); setLoading(false); })
       .catch(() => setLoading(false));
   }, []);
@@ -23,7 +23,7 @@ export default function Dashboard() {
   if (!data) return <div className="page-error">{t('load_error') || 'Erreur de chargement'}</div>;
 
   const fmt = (v) => new Intl.NumberFormat('fr-MR').format(v || 0);
-  const maxMonthly = Math.max(1, ...data.monthlyStats.map(m => m.total));
+  const maxMonthly = Math.max(1, ...data.monthlyStats.map(m => Number(m.revenue) || 0));
 
   return (
     <div className="page">
@@ -93,7 +93,7 @@ export default function Dashboard() {
               {data.recentInvoices.slice(0, 5).map(inv => (
                 <Link key={inv.id} to={`/invoices/${inv.id}`} className="invoice-row">
                   <div className="invoice-row-info">
-                    <span className="invoice-row-number">{inv.number}</span>
+                    <span className="invoice-row-number">{inv.invoice_number}</span>
                     <span className="invoice-row-client">{inv.client_name || inv.clientName || '—'}</span>
                   </div>
                   <div className="invoice-row-right">
@@ -123,8 +123,8 @@ export default function Dashboard() {
                     <div className="chart-bar-wrapper">
                       <div
                         className="chart-bar"
-                        style={{ height: `${Math.max(4, (m.total / maxMonthly) * 100)}%` }}
-                        title={`${fmt(m.total)} MRU`}
+                        style={{ height: `${Math.max(4, ((Number(m.revenue) || 0) / maxMonthly) * 100)}%` }}
+                        title={`${fmt(m.revenue)} MRU`}
                       />
                     </div>
                     <span className="chart-bar-label">{m.label || m.month}</span>

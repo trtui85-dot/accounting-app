@@ -22,7 +22,7 @@ export default function ClientDetail() {
   useEffect(() => {
     (async () => {
       try {
-        const data = await get(`/api/clients/${id}`);
+        const data = await get(`/clients/${id}`);
         setClient(data);
       } catch {
         toast.error(t('error.loading'));
@@ -36,7 +36,7 @@ export default function ClientDetail() {
     const ok = await confirm(t('confirm.delete_client', { name: client.name }));
     if (!ok) return;
     try {
-      await del(`/api/clients/${id}`);
+      await del(`/clients/${id}`);
       toast.success(t('success.deleted'));
       navigate('/clients');
     } catch {
@@ -123,9 +123,9 @@ export default function ClientDetail() {
               className="invoice-row"
             >
               <div className="invoice-row-main">
-                <span className="invoice-row-number">{inv.number}</span>
+                <span className="invoice-row-number">{inv.invoice_number}</span>
                 <span className="invoice-row-date">
-                  {new Date(inv.date).toLocaleDateString('fr-FR')}
+                  {new Date(inv.issue_date).toLocaleDateString('fr-FR')}
                 </span>
               </div>
               <div className="invoice-row-right">

@@ -43,7 +43,7 @@ export default function InvoiceDetail() {
   useEffect(() => {
     (async () => {
       try {
-        const data = await get(`/api/invoices/${id}`);
+        const data = await get(`/invoices/${id}`);
         setInvoice(data);
       } catch {
         toast.error(t('error.loading'));
@@ -55,7 +55,7 @@ export default function InvoiceDetail() {
 
   const refreshInvoice = async () => {
     try {
-      const data = await get(`/api/invoices/${id}`);
+      const data = await get(`/invoices/${id}`);
       setInvoice(data);
     } catch {
       toast.error(t('error.loading'));
@@ -66,7 +66,7 @@ export default function InvoiceDetail() {
     const ok = await confirm('Marquer cette facture comme envoyée ?');
     if (!ok) return;
     try {
-      await put(`/api/invoices/${id}/status`, { status: 'sent' });
+      await put(`/invoices/${id}/status`, { status: 'sent' });
       await refreshInvoice();
       toast.success(t('sent') + ' ✓');
     } catch {
@@ -78,7 +78,7 @@ export default function InvoiceDetail() {
     const ok = await confirm('Supprimer cette facture ?');
     if (!ok) return;
     try {
-      await del(`/api/invoices/${id}`);
+      await del(`/invoices/${id}`);
       toast.success(t('delete') + ' ✓');
       navigate('/invoices');
     } catch {
@@ -100,7 +100,7 @@ export default function InvoiceDetail() {
     }
     setPaying(true);
     try {
-      await post(`/api/invoices/${id}/payments`, {
+      await post(`/invoices/${id}/payments`, {
         amount,
         payment_date: payDate,
         method: payMethod,

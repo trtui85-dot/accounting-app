@@ -30,7 +30,7 @@ export default function InvoiceList() {
     (async () => {
       setLoading(true);
       try {
-        const data = await get('/api/invoices');
+        const data = await get('/invoices');
         setInvoices(data);
       } catch {
         toast.error(t('error.loading'));

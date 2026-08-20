@@ -29,13 +29,18 @@ router.get('/', async (req, res) => {
       GROUP BY 1 ORDER BY 1
     `);
     res.json({
-      totalRevenue: totalRevenue.value,
-      paidRevenue: paidRevenue.value,
-      pendingAmount: pendingAmount.value,
-      overdueAmount: overdueAmount.value,
-      totalClients: totalClients.value,
-      totalInvoices: totalInvoices.value,
-      paidCount: paidCount.value,
+      stats: {
+        totalRevenue: totalRevenue.value,
+        paidRevenue: paidRevenue.value,
+        pendingAmount: pendingAmount.value,
+        overdueAmount: overdueAmount.value,
+        totalClients: totalClients.value,
+        totalInvoices: totalInvoices.value,
+        paidCount: paidCount.value,
+        revenueSub: `${paidCount.value} payée(s)`,
+        pendingSub: '',
+        overdueSub: '',
+      },
       recentInvoices,
       monthlyStats,
     });

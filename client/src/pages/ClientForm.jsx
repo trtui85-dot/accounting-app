@@ -33,7 +33,7 @@ export default function ClientForm() {
     if (!isEdit) return;
     (async () => {
       try {
-        const data = await get(`/api/clients/${id}`);
+        const data = await get(`/clients/${id}`);
         setForm({
           name: data.name || '',
           email: data.email || '',
@@ -66,9 +66,9 @@ export default function ClientForm() {
     setSaving(true);
     try {
       if (isEdit) {
-        await put(`/api/clients/${id}`, form);
+        await put(`/clients/${id}`, form);
       } else {
-        await post('/api/clients', form);
+        await post('/clients', form);
       }
       toast.success(t('success.saved'));
       navigate('/clients');

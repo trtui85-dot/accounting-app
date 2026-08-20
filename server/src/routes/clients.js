@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
     const params = [];
     if (search) { sql += ` AND (name ILIKE ? OR email ILIKE ? OR phone ILIKE ?)`; params.push(`%${search}%`, `%${search}%`, `%${search}%`); }
     sql += ` ORDER BY name`;
-    const rows = await query(sql, params);
+    const [rows] = await query(sql, params);
     res.json(rows);
   } catch (e) { res.status(500).json({ error: e.message }); }
 });

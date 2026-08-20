@@ -22,7 +22,7 @@ export default function ProductList() {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const data = await get('/api/products');
+      const data = await get('/products');
       setProducts(data);
     } catch {
       toast.error(t('error.loading'));
@@ -40,7 +40,7 @@ export default function ProductList() {
     const ok = await confirm(t('confirm.delete_product', { name: product.name }));
     if (!ok) return;
     try {
-      await del(`/api/products/${product.id}`);
+      await del(`/products/${product.id}`);
       setProducts(prev => prev.filter(p => p.id !== product.id));
       toast.success(t('success.deleted'));
     } catch {

@@ -43,7 +43,7 @@ export default function ProductForm() {
     if (!isEdit) return;
     (async () => {
       try {
-        const data = await get(`/api/products/${id}`);
+        const data = await get(`/products/${id}`);
         setForm({
           name: data.name || '',
           description: data.description || '',
@@ -77,9 +77,9 @@ export default function ProductForm() {
         tva_rate: form.tva_rate === '' ? null : Number(form.tva_rate),
       };
       if (isEdit) {
-        await put(`/api/products/${id}`, body);
+        await put(`/products/${id}`, body);
       } else {
-        await post('/api/products', body);
+        await post('/products', body);
       }
       toast.success(t('success.saved'));
       navigate('/products');

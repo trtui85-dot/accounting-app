@@ -20,7 +20,7 @@ export default function ClientList() {
   const fetchClients = async () => {
     setLoading(true);
     try {
-      const data = await get('/api/clients');
+      const data = await get('/clients');
       setClients(data);
     } catch (err) {
       toast.error(t('error.loading'));
@@ -38,7 +38,7 @@ export default function ClientList() {
     const ok = await confirm(t('confirm.delete_client', { name: client.name }));
     if (!ok) return;
     try {
-      await del(`/api/clients/${client.id}`);
+      await del(`/clients/${client.id}`);
       setClients(prev => prev.filter(c => c.id !== client.id));
       toast.success(t('success.deleted'));
     } catch {

@@ -51,8 +51,8 @@ export default function InvoiceForm() {
     (async () => {
       try {
         const [clData, prData] = await Promise.all([
-          get('/api/clients'),
-          get('/api/products'),
+          get('/clients'),
+          get('/products'),
         ]);
         setClients(clData);
         setProducts(prData);
@@ -66,7 +66,7 @@ export default function InvoiceForm() {
     if (!isEdit) return;
     (async () => {
       try {
-        const inv = await get(`/api/invoices/${id}`);
+        const inv = await get(`/invoices/${id}`);
         if (inv.status !== 'draft') {
           setEditBlocked(true);
           return;
@@ -162,9 +162,9 @@ export default function InvoiceForm() {
     setSaving(true);
     try {
       if (isEdit) {
-        await put(`/api/invoices/${id}`, payload);
+        await put(`/invoices/${id}`, payload);
       } else {
-        await post('/api/invoices', payload);
+        await post('/invoices', payload);
       }
       toast.success(t('save') + ' ✓');
       navigate('/invoices');
