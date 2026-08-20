@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from './auth.jsx';
 import { useIsMobile } from './hooks/useIsMobile.js';
 import Layout from './components/Layout.jsx';
@@ -27,49 +27,9 @@ import MobileProductList from './pages/mobile/MobileProductList.jsx';
 import MobileProductForm from './pages/mobile/MobileProductForm.jsx';
 import MobileSettings from './pages/mobile/MobileSettings.jsx';
 
-function PrivateRoute({ children }) {
+function PrivateRoute() {
   const { user } = useAuth();
-  return user ? children : <Navigate to="/login" />;
-}
-
-function DesktopRoutes() {
-  return (
-    <Route path="/" element={<PrivateRoute><Layout /></PrivateRoute>}>
-      <Route index element={<Dashboard />} />
-      <Route path="invoices" element={<InvoiceList />} />
-      <Route path="invoices/new" element={<InvoiceForm />} />
-      <Route path="invoices/:id" element={<InvoiceDetail />} />
-      <Route path="invoices/:id/edit" element={<InvoiceForm />} />
-      <Route path="clients" element={<ClientList />} />
-      <Route path="clients/new" element={<ClientForm />} />
-      <Route path="clients/:id" element={<ClientDetail />} />
-      <Route path="clients/:id/edit" element={<ClientForm />} />
-      <Route path="products" element={<ProductList />} />
-      <Route path="products/new" element={<ProductForm />} />
-      <Route path="products/:id/edit" element={<ProductForm />} />
-      <Route path="settings" element={<SettingsPage />} />
-    </Route>
-  );
-}
-
-function MobileRoutes() {
-  return (
-    <Route path="/" element={<PrivateRoute><MobileLayout /></PrivateRoute>}>
-      <Route index element={<MobileDashboard />} />
-      <Route path="invoices" element={<MobileInvoiceList />} />
-      <Route path="invoices/new" element={<MobileInvoiceForm />} />
-      <Route path="invoices/:id" element={<MobileInvoiceDetail />} />
-      <Route path="invoices/:id/edit" element={<MobileInvoiceForm />} />
-      <Route path="clients" element={<MobileClientList />} />
-      <Route path="clients/new" element={<MobileClientForm />} />
-      <Route path="clients/:id" element={<MobileClientDetail />} />
-      <Route path="clients/:id/edit" element={<MobileClientForm />} />
-      <Route path="products" element={<MobileProductList />} />
-      <Route path="products/new" element={<MobileProductForm />} />
-      <Route path="products/:id/edit" element={<MobileProductForm />} />
-      <Route path="settings" element={<MobileSettings />} />
-    </Route>
-  );
+  return user ? <Outlet /> : <Navigate to="/login" />;
 }
 
 export default function App() {
@@ -79,7 +39,23 @@ export default function App() {
   return (
     <Routes>
       <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
-      {isMobile ? <MobileRoutes /> : <DesktopRoutes />}
+      <Route element={<PrivateRoute />}>
+        <Route element={isMobile ? <MobileLayout /> : <Layout />}>
+          <Route index element={isMobile ? <MobileDashboard /> : <Dashboard />} />
+          <Route path="invoices" element={isMobile ? <MobileInvoiceList /> : <InvoiceList />} />
+          <Route path="invoices/new" element={isMobile ? <MobileInvoiceForm /> : <InvoiceForm />} />
+          <Route path="invoices/:id" element={isMobile ? <MobileInvoiceDetail /> : <InvoiceDetail />} />
+          <Route path="invoices/:id/edit" element={isMobile ? <MobileInvoiceForm /> : <InvoiceForm />} />
+          <Route path="clients" element={isMobile ? <MobileClientList /> : <ClientList />} />
+          <Route path="clients/new" element={isMobile ? <MobileClientForm /> : <ClientForm />} />
+          <Route path="clients/:id" element={isMobile ? <MobileClientDetail /> : <ClientDetail />} />
+          <Route path="clients/:id/edit" element={isMobile ? <MobileClientForm /> : <ClientForm />} />
+          <Route path="products" element={isMobile ? <MobileProductList /> : <ProductList />} />
+          <Route path="products/new" element={isMobile ? <MobileProductForm /> : <ProductForm />} />
+          <Route path="products/:id/edit" element={isMobile ? <MobileProductForm /> : <ProductForm />} />
+          <Route path="settings" element={isMobile ? <MobileSettings /> : <SettingsPage />} />
+        </Route>
+      </Route>
     </Routes>
   );
 }
