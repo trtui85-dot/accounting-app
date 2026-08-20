@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "concurrently \"cd server && node src/index.js\" \"cd client && npx vite --port 5176\"",
     "start": "cd server && node src/index.js",
-    "build": "cd client && npx vite build",
+    "build": "cd client && npm install && npx vite build && cd ../server && npm install",
     "install-all": "cd server && npm install && cd ../client && npm install"
   },
   "dependencies": {
