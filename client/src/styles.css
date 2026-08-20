@@ -2219,12 +2219,22 @@ textarea {
 
   .search-wrapper { max-width: 100%; margin-bottom: 12px; }
 
-  .invoices-grid { grid-template-columns: 1fr; gap: 8px; }
-  .invoice-card { padding: 12px; border-radius: 10px; gap: 6px; }
-  .invoice-card-number { font-size: 14px; }
-  .invoice-card-client { font-size: 12px; margin-bottom: 4px; }
-  .invoice-card-amount { font-size: 16px; }
-  .invoice-card-dates { font-size: 11px; padding-top: 8px; }
+  .invoices-grid { grid-template-columns: 1fr; gap: 6px; }
+  .invoice-card {
+    padding: 10px 12px;
+    border-radius: 10px;
+    gap: 0;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .invoice-card-header { width: auto; flex: 1; min-width: 0; gap: 8px; }
+  .invoice-card-number { font-size: 13px; font-weight: 700; }
+  .invoice-card-client { font-size: 12px; color: var(--text-secondary); margin-bottom: 0; font-weight: 500; }
+  .invoice-card-body { width: auto; flex-shrink: 0; gap: 8px; align-items: center; }
+  .invoice-card-amount { font-size: 13px; font-weight: 700; }
+  .invoice-card-paid { font-size: 10px; padding: 2px 6px; }
+  .invoice-card-dates { display: none; }
 
   .clients-grid { grid-template-columns: 1fr; gap: 8px; }
   .client-card { padding: 12px; border-radius: 10px; }
