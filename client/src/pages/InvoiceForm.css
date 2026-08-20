@@ -1,0 +1,132 @@
+.form-page .form-section {
+  background: var(--bg-card, #fff);
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.form-page .form-section .section-title {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.items-table {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.items-header {
+  display: grid;
+  grid-template-columns: 1.5fr 2fr 0.7fr 1fr 0.7fr 1.1fr 44px;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 2px solid var(--border, #e5e7eb);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary, #6b7280);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.item-row {
+  display: grid;
+  grid-template-columns: 1.5fr 2fr 0.7fr 1fr 0.7fr 1.1fr 44px;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border, #e5e7eb);
+  align-items: start;
+}
+
+.item-row:last-child {
+  border-bottom: none;
+}
+
+.item-row .form-select,
+.item-row .form-input {
+  padding: 8px 10px;
+  font-size: 13px;
+}
+
+.item-row .col-product .form-select {
+  min-width: 0;
+}
+
+.item-row .col-sub {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 8px;
+  font-size: 13px;
+}
+
+.line-subtotal {
+  font-weight: 600;
+  color: var(--text-primary, #111827);
+}
+
+.line-tva {
+  font-size: 11px;
+  color: var(--text-muted, #9ca3af);
+}
+
+.item-row .col-action {
+  padding-top: 6px;
+  display: flex;
+  justify-content: center;
+}
+
+.item-row .col-action .btn-icon:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.add-line-btn {
+  margin-top: 12px;
+}
+
+.totals-section {
+  max-width: 360px;
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.totals-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: var(--text-secondary, #6b7280);
+}
+
+.totals-row-total {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary, #111827);
+  border-top: 2px solid var(--border, #e5e7eb);
+  padding-top: 10px;
+  margin-top: 4px;
+}
+
+@media (max-width: 768px) {
+  .items-header {
+    display: none;
+  }
+
+  .item-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 12px 0;
+  }
+
+  .item-row .col-product,
+  .item-row .col-desc {
+    grid-column: 1 / -1;
+  }
+
+  .item-row .col-action {
+    justify-content: flex-end;
+  }
+}

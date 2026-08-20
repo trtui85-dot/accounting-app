@@ -1,0 +1,14 @@
+{
+  "name": "accounting-app",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"cd server && node src/index.js\" \"cd client && npx vite --port 5176\"",
+    "start": "cd server && node src/index.js",
+    "build": "cd client && npx vite build",
+    "install-all": "cd server && npm install && cd ../client && npm install"
+  },
+  "dependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
