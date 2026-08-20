@@ -1,17 +1,29 @@
 import pg from 'pg';
 const { Pool } = pg;
 
-const DB_URL = process.env.DATABASE_URL || 'postgresql://factory_manager_user:apDO6DzshNP0oLCKmACPunlg53BX0W97@dpg-da2crt15efls73a0lhn0-a/factory_manager';
+const DB_URL = process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/accounting_local';
 
 const pool = new Pool({
   connectionString: DB_URL,
-  ssl: { rejectUnauthorized: false },
+  ssl: DB_URL.includes('localhost') ? false : { rejectUnauthorized: false },
   max: 10,
   options: '-c search_path=accounting_app,public',
 });
 
 export async function query(sql, params = []) {
-  const result = await pool.query(sql, params);
+  let processed = sql;
+  const processedParams = [];
+  let paramIndex = 1;
+  if (params && params.length > 0) {
+    for (let i = 0; i < sql.length; i++) {
+      if (sql[i] === '?') {
+        processed = processed.substring(0, i) + `$${paramIndex++}` + processed.substring(i + 1);
+        processedParams.push(params[processedParams.length]);
+        i += 1;
+      }
+    }
+  }
+  const result = await pool.query(processed, processedParams);
   return [result.rows, result.fields];
 }
 
@@ -158,25 +170,26 @@ async function migrate() {
   `);
 
   // Fix admin phone + PIN
-  const bcrypt = await import('bcryptjs');
+  const bcryptMod = await import('bcryptjs');
+  const bcrypt = bcryptMod.default || bcryptMod;
   const adminPinHash = await bcrypt.hash('2222', 10);
   await pool.query(`UPDATE accounting_app.users SET phone = '22222222', pin_hash = $1, active = 1 WHERE role = 'ADMIN'`, [adminPinHash]);
 
   // Seed admin if not exists
-  const [existing] = await pool.query(`SELECT id FROM accounting_app.users WHERE phone = '22222222'`);
-  if (existing.rows.length === 0) {
+  const existingResult = await pool.query(`SELECT id FROM accounting_app.users WHERE phone = '22222222'`);
+  if (existingResult.rows.length === 0) {
     await pool.query(`INSERT INTO accounting_app.users (name, phone, pin_hash, role, avatar_color) VALUES ('Admin', '22222222', $1, 'ADMIN', '#ef4444')`, [adminPinHash]);
   }
 
   // Seed settings
-  const [settingsExist] = await pool.query(`SELECT id FROM accounting_app.settings LIMIT 1`);
-  if (settingsExist.rows.length === 0) {
+  const settingsResult = await pool.query(`SELECT id FROM accounting_app.settings LIMIT 1`);
+  if (settingsResult.rows.length === 0) {
     await pool.query(`INSERT INTO accounting_app.settings (company_name, currency, currency_symbol, invoice_prefix, invoice_next_number) VALUES ('Mon Entreprise', 'MRU', 'MRU', 'FA', 1)`);
   }
 
   // Seed clients
-  const [clientsExist] = await pool.query(`SELECT id FROM accounting_app.clients LIMIT 1`);
-  if (clientsExist.rows.length === 0) {
+  const clientsResult = await pool.query(`SELECT id FROM accounting_app.clients LIMIT 1`);
+  if (clientsResult.rows.length === 0) {
     const clients = [
       ['Société NHAMA', 'contact@nhama.mr', '45321010', '44123456', 'Avenue de la République', 'Nouakchott'],
       ['Boulangerie El Baraka', 'elbaraka@gmail.com', '45201020', '44234567', 'Quartier Ancienne', 'Nouakchott'],
@@ -190,8 +203,8 @@ async function migrate() {
   }
 
   // Seed products
-  const [productsExist] = await pool.query(`SELECT id FROM accounting_app.products LIMIT 1`);
-  if (productsExist.rows.length === 0) {
+  const productsResult = await pool.query(`SELECT id FROM accounting_app.products LIMIT 1`);
+  if (productsResult.rows.length === 0) {
     const products = [
       ['Consultation', 'Service de conseil', 15000, 16, 'heure'],
       ['Développement Web', 'Création de site web', 150000, 16, 'projet'],
@@ -208,8 +221,8 @@ async function migrate() {
   }
 
   // Seed invoices + items + payments
-  const [invoicesExist] = await pool.query(`SELECT id FROM accounting_app.invoices LIMIT 1`);
-  if (invoicesExist.rows.length === 0) {
+  const invoicesResult = await pool.query(`SELECT id FROM accounting_app.invoices LIMIT 1`);
+  if (invoicesResult.rows.length === 0) {
     const invoices = [
       ['FA-0001', 1, 'paid', '2026-01-15', '2026-02-15', 150000, 24000, 174000, 174000],
       ['FA-0002', 2, 'paid', '2026-02-10', '2026-03-10', 200000, 32000, 232000, 232000],

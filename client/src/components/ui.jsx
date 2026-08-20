@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 export function Spinner() {
   return <div className="spinner-container"><div className="spinner" /></div>;
@@ -78,7 +79,6 @@ export function PageHeader({ title, subtitle, action }) {
 
 export function BackButton({ to }) {
   const { t } = useTranslation();
-  const { useNavigate } = require('react-router-dom');
   const navigate = useNavigate();
   return (
     <button className="back-btn" onClick={() => navigate(to || -1)}>

@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: accounting-app
+    runtime: node
+    plan: free
+    buildCommand: cd client && npm install && npm run build && cd ../server && npm install
+    startCommand: cd server && node src/index.js
+    envVars:
+      - key: DATABASE_URL
+        value: postgresql://factory_manager_user:apDO6DzshNP0oLCKmACPunlg53BX0W97@dpg-da2crt15efls73a0lhn0-a/factory_manager
+      - key: NODE_ENV
+        value: production

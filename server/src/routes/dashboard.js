@@ -7,13 +7,13 @@ router.use(authMiddleware);
 
 router.get('/', async (req, res) => {
   try {
-    const [totalRevenue] = await query(`SELECT COALESCE(SUM(total), 0) as value FROM accounting_app.invoices WHERE status != 'cancelled'`);
-    const [paidRevenue] = await query(`SELECT COALESCE(SUM(paid_amount), 0) as value FROM accounting_app.invoices WHERE status != 'cancelled'`);
-    const [pendingAmount] = await query(`SELECT COALESCE(SUM(total - paid_amount), 0) as value FROM accounting_app.invoices WHERE status IN ('sent', 'overdue')`);
-    const [overdueAmount] = await query(`SELECT COALESCE(SUM(total - paid_amount), 0) as value FROM accounting_app.invoices WHERE status = 'overdue'`);
-    const [totalClients] = await query(`SELECT COUNT(*) as value FROM accounting_app.clients WHERE active = 1`);
-    const [totalInvoices] = await query(`SELECT COUNT(*) as value FROM accounting_app.invoices WHERE status != 'cancelled'`);
-    const [paidCount] = await query(`SELECT COUNT(*) as value FROM accounting_app.invoices WHERE status = 'paid'`);
+    const [[totalRevenue]] = await query(`SELECT COALESCE(SUM(total), 0) as value FROM accounting_app.invoices WHERE status != 'cancelled'`);
+    const [[paidRevenue]] = await query(`SELECT COALESCE(SUM(paid_amount), 0) as value FROM accounting_app.invoices WHERE status != 'cancelled'`);
+    const [[pendingAmount]] = await query(`SELECT COALESCE(SUM(total - paid_amount), 0) as value FROM accounting_app.invoices WHERE status IN ('sent', 'overdue')`);
+    const [[overdueAmount]] = await query(`SELECT COALESCE(SUM(total - paid_amount), 0) as value FROM accounting_app.invoices WHERE status = 'overdue'`);
+    const [[totalClients]] = await query(`SELECT COUNT(*) as value FROM accounting_app.clients WHERE active = 1`);
+    const [[totalInvoices]] = await query(`SELECT COUNT(*) as value FROM accounting_app.invoices WHERE status != 'cancelled'`);
+    const [[paidCount]] = await query(`SELECT COUNT(*) as value FROM accounting_app.invoices WHERE status = 'paid'`);
     const [recentInvoices] = await query(`
       SELECT i.*, c.name as client_name
       FROM accounting_app.invoices i
