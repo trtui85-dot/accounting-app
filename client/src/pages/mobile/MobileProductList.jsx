@@ -34,19 +34,19 @@ export default function MobileProductList() {
       ) : filtered.length === 0 ? (
         <div className="m-empty"><div className="m-empty-title">{t('no_products') || 'Aucun produit'}</div></div>
       ) : (
-        filtered.map(product => (
-          <Link key={product.id} to={`/products/${product.id}/edit`} className="m-product-card">
-            <div className="m-product-top">
+        <div className="m-product-grid">
+          {filtered.map(product => (
+            <Link key={product.id} to={`/products/${product.id}/edit`} className="m-product-card">
               <div className="m-product-name">{product.name}</div>
               <div className="m-product-price">{fmt.format(product.unit_price || 0)} MRU</div>
-            </div>
-            {product.description && <div className="m-product-desc">{product.description}</div>}
-            <div className="m-product-meta">
-              <span className="m-product-tag">{product.tva_rate ?? 16}% TVA</span>
-              {product.unit && <span className="m-product-tag">{product.unit}</span>}
-            </div>
-          </Link>
-        ))
+              {product.description && <div className="m-product-desc">{product.description}</div>}
+              <div className="m-product-meta">
+                <span className="m-product-tag">{product.tva_rate ?? 16}% TVA</span>
+                {product.unit && <span className="m-product-tag">{product.unit}</span>}
+              </div>
+            </Link>
+          ))}
+        </div>
       )}
 
       <Link to="/products/new" className="m-btn m-btn-primary" style={{ marginTop: 8, display: 'flex' }}>
