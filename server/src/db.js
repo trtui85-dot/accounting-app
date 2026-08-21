@@ -11,50 +11,33 @@ const pool = new Pool({
 });
 
 export async function query(sql, params = []) {
-  let processed = sql;
   const processedParams = [];
   let paramIndex = 1;
-  if (params && params.length > 0) {
-    for (let i = 0; i < sql.length; i++) {
-      if (sql[i] === '?') {
-        processed = processed.substring(0, i) + `$${paramIndex++}` + processed.substring(i + 1);
-        processedParams.push(params[processedParams.length]);
-        i += 1;
-      }
-    }
-  }
+  const processed = sql.replace(/\?/g, () => {
+    processedParams.push(params[processedParams.length]);
+    return `$${paramIndex++}`;
+  });
   const result = await pool.query(processed, processedParams);
   return [result.rows, result.fields];
 }
 
 export async function execQuery(sql, params = []) {
-  let processed = sql;
   const processedParams = [];
   let paramIndex = 1;
-
-  if (params && params.length > 0) {
-    for (let i = 0; i < sql.length; i++) {
-      if (sql[i] === '?') {
-        const param = params[processedParams.length];
-        if (Array.isArray(param)) {
-          const placeholders = param.map(() => `$${paramIndex++}`).join(', ');
-          processed = processed.substring(0, i) + placeholders + processed.substring(i + 1);
-          processedParams.push(...param);
-          i += placeholders.length - 1;
-        } else {
-          processed = processed.substring(0, i) + `$${paramIndex++}` + processed.substring(i + 1);
-          processedParams.push(param);
-        }
-      }
+  const processed = sql.replace(/\?/g, () => {
+    const param = params[processedParams.length];
+    if (Array.isArray(param)) {
+      const placeholders = param.map(() => `$${paramIndex++}`).join(', ');
+      processedParams.push(...param);
+      return placeholders;
     }
-  }
+    processedParams.push(param);
+    return `$${paramIndex++}`;
+  });
 
   const isInsert = /^\s*INSERT/i.test(sql);
-  if (isInsert && !processed.includes('RETURNING')) {
-    processed += ' RETURNING *';
-  }
-
-  const result = await pool.query(processed, processedParams);
+  const finalSql = isInsert && !processed.includes('RETURNING') ? processed + ' RETURNING *' : processed;
+  const result = await pool.query(finalSql, processedParams);
   return isInsert ? result.rows[0] : result.rows;
 }
 
